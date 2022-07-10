@@ -1,18 +1,28 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
-// type Quote struct {
-// 	Body   string
-// 	Author string
-// }
+type Quote struct {
+	Body   string `json:"body"`
+	Author string `json:"author"`
+}
 
-func getQuote() string {
+//	stoic-server returns an extra [] in the body. this function removes them
+func cleanUpRequestBody(requestBody []byte) []byte {
+
+	cleanBody := requestBody[1 : len(requestBody)-1]
+
+	return cleanBody
+}
+
+func getQuoteBytes() []byte {
 	const quoteApiUrl = "https://stoic-server.herokuapp.com/random"
 
 	response, err := http.Get(quoteApiUrl)
@@ -23,19 +33,28 @@ func getQuote() string {
 	//	close the request
 	defer response.Body.Close()
 
-	fmt.Println("Status code: ", response.StatusCode)
-	fmt.Println("Content length is: ", response.ContentLength)
+	body, _ := ioutil.ReadAll(response.Body)
+	cleanBody := cleanUpRequestBody(body)
 
-	content, _ := ioutil.ReadAll(response.Body)
-
-	return string(content)
+	return cleanBody
 }
 
 func main() {
+	quoteBytes := getQuoteBytes()
 
-	quote := getQuote()
+	var responseString strings.Builder
+	responseString.Write(quoteBytes)
 
-	fmt.Printf(string(quote))
+	var quote Quote
+
+	err := json.Unmarshal([]byte(quoteBytes), &quote)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(quote)
+
+	// fmt.Printf(quote)
 
 	// body, err := ioutil.ReadAll(response.Body)
 
