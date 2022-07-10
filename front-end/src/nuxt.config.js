@@ -1,3 +1,30 @@
+const fs = require("fs");
+const ini = require("ini")
+
+function loadConfig() {
+  let filePaths = [
+    "../../environments/local.ini",
+    "../../environments/local.secrets.ini"
+  ]
+
+  filePaths.forEach((filePath) => {
+
+    //  in the event the given filePath exists
+    if (fs.existsSync(filePath)) {
+      let config = ini.parse(fs.readFileSync(filePath, "utf-8"));
+
+      Object.entries(config).forEach(([section_key, section_contents]) => {
+        Object.entries(section_contents).forEach(([key, value]) => {
+          process.env[`${section_key}_${key}`.toUpperCase()] = value;
+        });
+      });
+    }
+  })
+}
+
+loadConfig()
+console.log(process.env)
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -14,9 +41,9 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    // link: [
+    //   { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    // ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
