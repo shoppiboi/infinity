@@ -40,7 +40,7 @@ func getQuoteBytes() []byte {
 }
 
 func main() {
-	quoteBytes := getQuoteBytes()
+	var quoteBytes []byte = getQuoteBytes()
 
 	var responseString strings.Builder
 	responseString.Write(quoteBytes)
@@ -53,19 +53,4 @@ func main() {
 	}
 
 	fmt.Println(quote)
-
-	// fmt.Printf(quote)
-
-	// body, err := ioutil.ReadAll(response.Body)
-
-	// fmt.Println(string(body))
-
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-
-	// stringifiedBody := string(body)
-
-	// fmt.Print(stringifiedBody)
-
 }
