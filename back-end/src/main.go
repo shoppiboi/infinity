@@ -7,34 +7,39 @@ import (
 	"net/http"
 )
 
-type Quote struct {
-	Body   string
-	Author string
-}
-
-// func handleRequest() {
-
+// type Quote struct {
+// 	Body   string
+// 	Author string
 // }
 
-// func convertBodyFromBytesToJson() {
+func getQuote() string {
+	const quoteApiUrl = "https://stoic-server.herokuapp.com/random"
 
-// 	return
-
-// }
-
-func main() {
-	resp, err := http.Get("https://stoic-server.herokuapp.com/random")
-
-	// fmt.Println(resp)
+	response, err := http.Get(quoteApiUrl)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// data, err := ioutil.ReadAll(resp.Body)
+	//	close the request
+	defer response.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("Status code: ", response.StatusCode)
+	fmt.Println("Content length is: ", response.ContentLength)
 
-	fmt.Println(string(body))
+	content, _ := ioutil.ReadAll(response.Body)
+
+	return string(content)
+}
+
+func main() {
+
+	quote := getQuote()
+
+	fmt.Printf(string(quote))
+
+	// body, err := ioutil.ReadAll(response.Body)
+
+	// fmt.Println(string(body))
 
 	// if err != nil {
 	// 	log.Fatalln(err)
