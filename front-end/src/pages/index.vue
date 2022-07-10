@@ -1,9 +1,9 @@
-<template>
-  <Tutorial/>
+<template lang="pug">
+Main
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
+  name: 'Do You See How Infinite You Are?'
 }
 </script>
