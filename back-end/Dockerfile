@@ -1,12 +1,12 @@
-# syntax=docker/dockerfile:1
+FROM golang:1.18-bullseye
 
-FROM golang:1.18.3-alpine3.15
+RUN mkdir code
 
-ADD ./src/ /code/
-WORKDIR /code
+ADD ./src/ /code
+WORKDIR /code/
+
+ENV PORT=8080
 
 RUN go build main.go
-
-EXPOSE 8080
 
 CMD ["./main"]
